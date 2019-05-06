@@ -25,6 +25,13 @@
 				</configuration>
 			</plugin>
 		</plugins>
+	    <extensions>
+		    <extension>
+		      <groupId>io.packagecloud.maven.wagon</groupId>
+		      <artifactId>maven-packagecloud-wagon</artifactId>
+		      <version>0.0.6</version>
+		    </extension>
+		</extensions>
 	</build>
 	<dependencies>
 		<dependency>
@@ -44,4 +51,14 @@
     		<version>3.10.2</version>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<repository>
+	    	<id>packagecloud-JonathanTonckensHU</id>
+		    <url>packagecloud+https://packagecloud.io/JonathanTonckensHU/hu-test</url>
+		</repository>
+	  	<snapshotRepository>
+	    	<id>packagecloud-JonathanTonckensHU</id>
+	    	<url>packagecloud+https://packagecloud.io/JonathanTonckensHU/hu-test</url>
+	  	</snapshotRepository>
+	</distributionManagement>
 </project>
