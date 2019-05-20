@@ -12,6 +12,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<slf4jVersion>1.6.1</slf4jVersion>
+		<!-- exclude the file with auto generated code -->
+		<sonar.exclusions>**/Email.java</sonar.exclusions>
 	</properties>
 
 	<build>

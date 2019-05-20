@@ -54,7 +54,7 @@ public class MongoSaver {
 		
 		Iterator<Document> it = c.find().iterator();
 		
-		ArrayList<Email> emails = new ArrayList<Email>();
+		ArrayList<Email> emails = new ArrayList<>();
 		
 		while(it.hasNext())
 		{
