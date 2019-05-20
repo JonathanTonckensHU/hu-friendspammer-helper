@@ -1,6 +1,8 @@
 package nl.hu.sie.bep.jonathan.friendspammer_helper;
 
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.mongodb.MongoClient;
 //import com.mongodb.MongoClientOptions;
@@ -13,15 +15,12 @@ import com.mongodb.client.MongoDatabase;
 public class MongoSaver {
 	
 	public static boolean saveEmail(String to, String from, String subject, String text, Boolean html) {
-		//String userName = "spammer";
-		//String password = "hamspam";
+		final Logger logger = LoggerFactory.getLogger(MongoSaver.class);
 		String database = "friendspammer";
-		
-		//MongoCredential credential = MongoCredential.createCredential(userName, database, password.toCharArray());
 		
 		boolean success = true;
 		
-		try (MongoClient mongoClient = new MongoClient(new ServerAddress("localhost", 27017))) {//, credential, MongoClientOptions.builder().build()) ) {
+		try (MongoClient mongoClient = new MongoClient(new ServerAddress("localhost", 27017))) {
 			
 			MongoDatabase db = mongoClient.getDatabase( database );
 			
@@ -34,8 +33,7 @@ public class MongoSaver {
 			        .append("asHtml", html);
 			c.insertOne(doc);
 		} catch (MongoException mongoException) {
-			System.out.println("XXXXXXXXXXXXXXXXXX ERROR WHILE SAVING TO MONGO XXXXXXXXXXXXXXXXXX");
-			mongoException.printStackTrace();
+			logger.error("Error while saving to Mongo", mongoException);
 			success = false;
 		}
 		
