@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class HistoryTest {
 	@Test
+	@Disabled("Uses a local database and is therefore disabled because that doesn't work on wercker")
 	public void testHistory() {
 		Email testEmail = new Email("test@example.com", "me@example.com", "test", "test text", false);
 		MongoSaver.saveEmail(testEmail);
