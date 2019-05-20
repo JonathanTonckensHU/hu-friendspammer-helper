@@ -7,7 +7,6 @@ import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -16,7 +15,7 @@ public class EmailSender {
 	private static final String SMTP_HOST = "localhost";
 	private static final String SMTP_PORT = "25";
 	
-	public static void sendEmail(String subject, String to, String messageBody, boolean asHtml) throws MessagingException {
+	public static void sendEmail(Email email) throws MessagingException {
 
 		Properties props = new Properties();
 		props.put("mail.smtp.host", SMTP_HOST);
@@ -36,17 +35,17 @@ public class EmailSender {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("spammer@spammer.com"));
 			message.setRecipients(Message.RecipientType.TO,
-				InternetAddress.parse(to));
-			message.setSubject(subject);
+				InternetAddress.parse(email.getTo()));
+			message.setSubject(email.getSubject());
 			
-			if (asHtml) {
-					message.setContent(messageBody, "text/html; charset=utf-8");
+			if (email.isAsHTML()) {
+					message.setContent(email.getText(), "text/html; charset=utf-8");
 			} else {
-				message.setText(messageBody);	
+				message.setText(email.getText());	
 			}
 			Transport.send(message);
 
-			MongoSaver.saveEmail(to, "spammer@spamer.com", subject, messageBody, asHtml);
+			MongoSaver.saveEmail(email);
 	}
 
 	public static void sendEmail(String subject, String[] toList, String messageBody, boolean asHtml) throws MessagingException {
@@ -54,7 +53,6 @@ public class EmailSender {
 		Properties props = new Properties();
 		props.put("mail.smtp.host", SMTP_HOST);
 		props.put("mail.smtp.port", SMTP_PORT);
-		//props.put("mail.smtp.auth", "true");
 		
 		String username = "YOUR MAIL USERNAME";
 		String password = "YOUR MAIL PASSWORD";
@@ -79,6 +77,8 @@ public class EmailSender {
 				message.setText(messageBody);	
 			}
 			Transport.send(message);
+			
+			//TODO: this doesn't save anything to the database, is that intended?
 		}
 	}
 
