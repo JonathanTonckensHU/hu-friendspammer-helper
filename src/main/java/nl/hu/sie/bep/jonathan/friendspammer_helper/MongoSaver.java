@@ -5,8 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mongodb.MongoClient;
-//import com.mongodb.MongoClientOptions;
-//import com.mongodb.MongoCredential;
 import com.mongodb.MongoException;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
@@ -41,4 +39,5 @@ public class MongoSaver {
  		
 	}
 
+	private MongoSaver() {} //make sure it can't be initialized because there are only static methods
 }
