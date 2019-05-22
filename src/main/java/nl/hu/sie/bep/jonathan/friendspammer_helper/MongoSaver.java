@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
-import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
@@ -22,7 +21,7 @@ public class MongoSaver {
 		
 		boolean success = true;
 		
-		try (MongoClient mongoClient = new MongoClient(new ServerAddress("localhost", 27017))) {
+		try (MongoClient mongoClient = MongoConnector.connect()) {
 			
 			MongoDatabase db = mongoClient.getDatabase( database );
 			
@@ -44,36 +43,40 @@ public class MongoSaver {
 	}
 	
 	public static List<Email> getHistory() {	
+		final Logger logger = LoggerFactory.getLogger(MongoSaver.class);
 		String database = "friendspammer";
 		
-		MongoClient mongoClient = new MongoClient(new ServerAddress("localhost", 27017));
+		try (MongoClient mongoClient = MongoConnector.connect()) {
 		
-		MongoDatabase db = mongoClient.getDatabase(database);
-		
-		MongoCollection<Document> c = db.getCollection("email");
-		
-		Iterator<Document> it = c.find().iterator();
-		
-		ArrayList<Email> emails = new ArrayList<>();
-		
-		while(it.hasNext())
-		{
-			Document emailDoc = it.next();
-			Email email = new Email(
-				emailDoc.get("to").toString(),
-				emailDoc.get("from").toString(),
-				emailDoc.get("subject").toString(),
-				emailDoc.get("text").toString(),
-				(boolean)emailDoc.get("asHtml")
-			);
+			MongoDatabase db = mongoClient.getDatabase(database);
 			
-			emails.add(email);
+			MongoCollection<Document> c = db.getCollection("email");
+			
+			Iterator<Document> it = c.find().iterator();
+			
+			ArrayList<Email> emails = new ArrayList<>();
+			
+			while(it.hasNext())
+			{
+				Document emailDoc = it.next();
+				Email email = new Email(
+					emailDoc.get("to").toString(),
+					emailDoc.get("from").toString(),
+					emailDoc.get("subject").toString(),
+					emailDoc.get("text").toString(),
+					(boolean)emailDoc.get("asHtml")
+				);
+				
+				emails.add(email);
+				
+				return emails;
+			}
+
+		} catch (MongoException mongoException) {
+			logger.error("Error while saving to Mongo", mongoException);
 		}
-
-
-		mongoClient.close();
 		
-		return emails;
+		return null;
 	}
 
 	private MongoSaver() {} //make sure it can't be initialized because there are only static methods

@@ -89,4 +89,9 @@ public class Email {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return "Email [to=" + to + ", from=" + from + ", subject=" + subject + ", text=" + text + ", asHTML=" + asHTML
+				+ "]";
+	}
 }

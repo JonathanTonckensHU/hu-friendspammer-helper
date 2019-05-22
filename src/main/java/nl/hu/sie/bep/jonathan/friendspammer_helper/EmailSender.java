@@ -25,27 +25,27 @@ public class EmailSender {
 		String password = "45e7c5f4925a9d";
 
 		Session session = Session.getInstance(props,
-				  new javax.mail.Authenticator() {
-					@Override
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(username, password);
-					}
-				  });
+			  new javax.mail.Authenticator() {
+				@Override
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(username, password);
+				}
+		});
 
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("spammer@spammer.com"));
-			message.setRecipients(Message.RecipientType.TO,
-				InternetAddress.parse(email.getTo()));
-			message.setSubject(email.getSubject());
-			
-			if (email.isAsHTML()) {
-					message.setContent(email.getText(), "text/html; charset=utf-8");
-			} else {
-				message.setText(email.getText());	
-			}
-			Transport.send(message);
+		Message message = new MimeMessage(session);
+		message.setFrom(new InternetAddress("spammer@spammer.com"));
+		message.setRecipients(Message.RecipientType.TO,
+			InternetAddress.parse(email.getTo()));
+		message.setSubject(email.getSubject());
+		
+		if (email.isAsHTML()) {
+				message.setContent(email.getText(), "text/html; charset=utf-8");
+		} else {
+			message.setText(email.getText());	
+		}
+		Transport.send(message);
 
-			MongoSaver.saveEmail(email);
+		MongoSaver.saveEmail(email);
 	}
 
 	public static void sendEmail(String subject, String[] toList, String messageBody, boolean asHtml) throws MessagingException {
